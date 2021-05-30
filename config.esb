@@ -1,0 +1,4 @@
+config.esb
+{
+String portName = COM3
+}
