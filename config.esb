@@ -1,4 +1,12 @@
 config.esb
 {
+String S8 = Strip[0].Gain
+String S7 = Strip[6].Gain
+String S6 = Strip[5].Gain
+String S5 = Strip[3].Gain
+String S4 = Strip[2].Gain
+String S3 = Strip[1].Gain
+String S2 = Bus[1].Gain
+String S1 = Bus[0].Gain
 String portName = COM3
 }

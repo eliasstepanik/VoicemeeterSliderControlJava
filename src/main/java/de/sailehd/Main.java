@@ -15,10 +15,18 @@ import java.util.Scanner;
 public class Main {
 
     private Thread loop;
-
+    private static EasyBase config;
     public static void main(String[] args) throws Exception {
-        EasyBase config = new EasyBase("config");
+        config = new EasyBase("config");
         config.createData("portName", new String("COM3"));
+        config.createData("S1", new String("Bus[0].Gain"));
+        config.createData("S2", new String("Bus[1].Gain"));
+        config.createData("S3", new String("Strip[1].Gain"));
+        config.createData("S4", new String("Strip[2].Gain"));
+        config.createData("S5", new String("Strip[3].Gain"));
+        config.createData("S6", new String("Strip[5].Gain"));
+        config.createData("S7", new String("Strip[6].Gain"));
+        config.createData("S8", new String("Strip[0].Gain"));
 
         String portName = (String) config.getData("portName");
         SerialPort comPort = null;
@@ -69,14 +77,74 @@ public class Main {
                             sliderValuesIntVoicemeeter.add(map(value, 0, 1023, 12f, -60f));
                         }
 
-                        Voicemeeter.setParameterFloat("Bus[0].Gain", sliderValuesIntVoicemeeter.get(0)); //Speaker
-                        Voicemeeter.setParameterFloat("Bus[1].Gain", sliderValuesIntVoicemeeter.get(1)); //Headphones
-                        Voicemeeter.setParameterFloat("Strip[1].Gain", sliderValuesIntVoicemeeter.get(2)); //Spotify
-                        Voicemeeter.setParameterFloat("Strip[2].Gain", sliderValuesIntVoicemeeter.get(3)); //Browser
-                        Voicemeeter.setParameterFloat("Strip[3].Gain", sliderValuesIntVoicemeeter.get(4)); //Game
-                        Voicemeeter.setParameterFloat("Strip[5].Gain", sliderValuesIntVoicemeeter.get(5)); //VAIO
-                        Voicemeeter.setParameterFloat("Strip[6].Gain", sliderValuesIntVoicemeeter.get(6)); //AUX
-                        Voicemeeter.setParameterFloat("Strip[0].Gain", sliderValuesIntVoicemeeter.get(7)); //Mic
+                        if(map(sliderValuesIntRaw.get(0), 0, 1023, -30f, 12f) <= -30){
+                            Voicemeeter.setParameterStringA("Bus[0].Mute", "true");
+                        }
+                        else{
+                            Voicemeeter.setParameterStringA("Bus[0].Mute", "");
+                            Voicemeeter.setParameterFloat((String) config.getData("S1"), map(sliderValuesIntRaw.get(0), 0, 1023, -30f, 12f));//Speaker
+                        }
+
+                        if(map(sliderValuesIntRaw.get(1), 0, 1023, -30f, 12f) <= -30){
+                            Voicemeeter.setParameterStringA("Bus[1].Mute", "true");
+                        }
+                        else{
+                            Voicemeeter.setParameterStringA("Bus[1].Mute", "");
+                            Voicemeeter.setParameterFloat((String) config.getData("S2"), map(sliderValuesIntRaw.get(1), 0, 1023, -30f, 12f));//Headphones
+                        }
+
+
+                        if(map(sliderValuesIntRaw.get(2), 0, 1023, -25f, 12f) <= -25){
+                            Voicemeeter.setParameterStringA("Strip[1].Mute", "true");
+                        }
+                        else{
+                            Voicemeeter.setParameterStringA("Strip[1].Mute", "");
+                            Voicemeeter.setParameterFloat((String) config.getData("S3"), map(sliderValuesIntRaw.get(2), 0, 1023, -25f, 12f)); //Spotify
+                        }
+
+                        if(sliderValuesIntVoicemeeter.get(3) <= -59){
+                            Voicemeeter.setParameterStringA("Strip[2].Mute", "true");
+                        }
+                        else{
+                            Voicemeeter.setParameterStringA("Strip[2].Mute", "");
+                            Voicemeeter.setParameterFloat((String) config.getData("S4"), sliderValuesIntVoicemeeter.get(3)); //Browser
+                        }
+
+
+                        if(sliderValuesIntVoicemeeter.get(4) <= -59){
+                            Voicemeeter.setParameterStringA("Strip[3].Mute", "true");
+                        }
+                        else{
+                            Voicemeeter.setParameterStringA("Strip[3].Mute", "");
+                            Voicemeeter.setParameterFloat((String) config.getData("S5"), sliderValuesIntVoicemeeter.get(4)); //Game
+                        }
+
+                        if(sliderValuesIntVoicemeeter.get(5) <= -59){
+                            Voicemeeter.setParameterStringA("Strip[5].Mute", "true");
+                        }
+                        else{
+                            Voicemeeter.setParameterStringA("Strip[5].Mute", "");
+                            Voicemeeter.setParameterFloat((String) config.getData("S6"), sliderValuesIntVoicemeeter.get(5)); //VAIO
+                        }
+
+                        if(sliderValuesIntVoicemeeter.get(6) <= -59){
+                            Voicemeeter.setParameterStringA("Strip[6].Mute", "true");
+                        }
+                        else{
+                            Voicemeeter.setParameterStringA("Strip[6].Mute", "");
+                            Voicemeeter.setParameterFloat((String) config.getData("S7"), sliderValuesIntVoicemeeter.get(6)); //AUX
+                        }
+
+                        if(sliderValuesIntVoicemeeter.get(7) <= -59){
+                            Voicemeeter.setParameterStringA("Strip[0].Mute", "true");
+                        }
+                        else{
+                            Voicemeeter.setParameterStringA("Strip[0].Mute", "");
+                            Voicemeeter.setParameterFloat((String) config.getData("S8"), sliderValuesIntVoicemeeter.get(7)); //Mic
+                        }
+
+
+
 
                         Debug.log("Speaker: " + sliderValuesIntVoicemeeter.get(0) +
                                 " # " + "Headphones: " + sliderValuesIntVoicemeeter.get(1) +
